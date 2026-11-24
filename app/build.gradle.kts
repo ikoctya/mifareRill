@@ -12,8 +12,8 @@ android {
         applicationId = "com.nfckeywallet.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 14
-        versionName = "2.1.1"
+        versionCode = 15
+        versionName = "2.1.2"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -56,6 +56,7 @@ android {
             excludes += "/META-INF/DEPENDENCIES"
             excludes += "/META-INF/LICENSE*"
             excludes += "/META-INF/NOTICE*"
+            excludes += "/META-INF/BC*"
         }
     }
 }
@@ -82,6 +83,6 @@ dependencies {
     implementation("dev.rikka.shizuku:provider:13.1.5")
     implementation("com.github.MuntashirAkon:libadb-android:3.1.1")
     implementation("org.conscrypt:conscrypt-android:2.5.3")
-    implementation("org.bouncycastle:bcprov-jdk18on:1.78.1")
-    implementation("org.bouncycastle:bcpkix-jdk18on:1.78.1")
+    // Match libadb-android's transitive bcprov-jdk15to18:1.81 to avoid duplicate BouncyCastle classes
+    implementation("org.bouncycastle:bcpkix-jdk15to18:1.81")
 }
