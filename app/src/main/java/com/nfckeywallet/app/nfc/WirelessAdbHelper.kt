@@ -6,35 +6,24 @@ import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.os.Build
 import io.github.muntashirakon.adb.AbsAdbConnectionManager
-import sun.security.x509.AlgorithmId
-import sun.security.x509.CertificateAlgorithmId
-import sun.security.x509.CertificateExtensions
-import sun.security.x509.CertificateIssuerName
-import sun.security.x509.CertificateSerialNumber
-import sun.security.x509.CertificateSubjectName
-import sun.security.x509.CertificateValidity
-import sun.security.x509.CertificateVersion
-import sun.security.x509.CertificateX509Key
-import sun.security.x509.KeyIdentifier
-import sun.security.x509.PrivateKeyUsageExtension
-import sun.security.x509.SubjectKeyIdentifierExtension
-import sun.security.x509.X500Name
-import sun.security.x509.X509CertImpl
-import sun.security.x509.X509CertInfo
+import org.bouncycastle.asn1.x500.X500Name
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter
+import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.math.BigInteger
 import java.security.KeyPairGenerator
 import java.security.PrivateKey
 import java.security.SecureRandom
 import java.security.cert.Certificate
 import java.util.Date
-import java.util.Random
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * Local Wireless ADB client (Android 11+) using libadb-android.
+ * Local Wireless ADB client (Android 11+) using libadb-android + BouncyCastle X.509 certificate.
  * Connects strictly to 127.0.0.1 to run:
  *   pm grant com.nfckeywallet.app android.permission.WRITE_SECURE_SETTINGS
  * without needing a computer or third-party apps.
@@ -45,38 +34,28 @@ class WirelessAdbHelper private constructor() : AbsAdbConnectionManager() {
     private val certificateObj: Certificate
 
     init {
-        api = Build.VERSION.SDK_INT
+        setApi(Build.VERSION.SDK_INT)
         val kpg = KeyPairGenerator.getInstance("RSA")
         kpg.initialize(2048, SecureRandom())
         val pair = kpg.generateKeyPair()
         privateKeyObj = pair.private
 
-        val subject = "CN=mifareRill"
-        val algorithmName = "SHA512withRSA"
-        val notBefore = Date()
-        val notAfter = Date(System.currentTimeMillis() + 365L * 86400L * 1000L)
+        val now = System.currentTimeMillis()
+        val notBefore = Date(now - 60_000L)
+        val notAfter = Date(now + 365L * 86_400_000L)
+        val subject = X500Name("CN=mifareRill")
+        val serial = BigInteger(64, SecureRandom()).abs()
 
-        val extensions = CertificateExtensions()
-        extensions.set(
-            "SubjectKeyIdentifier",
-            SubjectKeyIdentifierExtension(KeyIdentifier(pair.public).identifier)
+        val certBuilder = JcaX509v3CertificateBuilder(
+            subject,
+            serial,
+            notBefore,
+            notAfter,
+            subject,
+            pair.public
         )
-        extensions.set("PrivateKeyUsage", PrivateKeyUsageExtension(notBefore, notAfter))
-
-        val x500Name = X500Name(subject)
-        val certInfo = X509CertInfo()
-        certInfo.set("version", CertificateVersion(2))
-        certInfo.set("serialNumber", CertificateSerialNumber(Random().nextInt() and Int.MAX_VALUE))
-        certInfo.set("algorithmID", CertificateAlgorithmId(AlgorithmId.get(algorithmName)))
-        certInfo.set("subject", CertificateSubjectName(x500Name))
-        certInfo.set("key", CertificateX509Key(pair.public))
-        certInfo.set("validity", CertificateValidity(notBefore, notAfter))
-        certInfo.set("issuer", CertificateIssuerName(x500Name))
-        certInfo.set("extensions", extensions)
-
-        val cert = X509CertImpl(certInfo)
-        cert.sign(privateKeyObj, algorithmName)
-        certificateObj = cert
+        val signer = JcaContentSignerBuilder("SHA256withRSA").build(privateKeyObj)
+        certificateObj = JcaX509CertificateConverter().getCertificate(certBuilder.build(signer))
     }
 
     override fun getPrivateKey(): PrivateKey = privateKeyObj
@@ -96,7 +75,7 @@ class WirelessAdbHelper private constructor() : AbsAdbConnectionManager() {
         }
 
         /**
-         * Attempts to auto-discover the local Wireless Debugging pairing port via mDNS.
+         * Attempts to auto-discover the local Wireless Debugging port via mDNS.
          */
         fun discoverLocalPort(context: Context, serviceType: String, timeoutMs: Long = 2500L): Int {
             val nsd = context.applicationContext.getSystemService(Context.NSD_SERVICE) as? NsdManager
@@ -180,7 +159,7 @@ class WirelessAdbHelper private constructor() : AbsAdbConnectionManager() {
                     if (discoveredConnect > 0) {
                         manager.connect("127.0.0.1", discoveredConnect)
                     } else {
-                        manager.autoConnect(context.applicationContext, 5000)
+                        manager.autoConnect(context.applicationContext, 5000L)
                     }
                 }
                 if (!connected) {

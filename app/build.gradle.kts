@@ -12,8 +12,8 @@ android {
         applicationId = "com.nfckeywallet.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 13
-        versionName = "2.1.0"
+        versionCode = 14
+        versionName = "2.1.1"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -52,6 +52,10 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/versions/9/OSGI-INF/MANIFEST.MF"
+            excludes += "/META-INF/DEPENDENCIES"
+            excludes += "/META-INF/LICENSE*"
+            excludes += "/META-INF/NOTICE*"
         }
     }
 }
@@ -77,6 +81,7 @@ dependencies {
     implementation("dev.rikka.shizuku:api:13.1.5")
     implementation("dev.rikka.shizuku:provider:13.1.5")
     implementation("com.github.MuntashirAkon:libadb-android:3.1.1")
-    implementation("com.github.MuntashirAkon:sun-security-android:1.1")
     implementation("org.conscrypt:conscrypt-android:2.5.3")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.78.1")
+    implementation("org.bouncycastle:bcpkix-jdk18on:1.78.1")
 }
