@@ -66,6 +66,7 @@ fun SettingsSheet(
     currentSystemLabel: String,
     diagnosticsReport: UidDiagnosticsReport?,
     backupMessage: String?,
+    onOpenPermissionSetup: () -> Unit,
     onRunDiagnostics: () -> Unit,
     onExportKeys: () -> Unit,
     onImportKeys: () -> Unit,
@@ -163,8 +164,16 @@ fun SettingsSheet(
                             )
                         }
                         Spacer(Modifier.height(8.dp))
+                        FilledTonalButton(
+                            onClick = onOpenPermissionSetup,
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Text("Выдать право без ПК (Wi-Fi / Shizuku / Root)")
+                        }
+                        Spacer(Modifier.height(6.dp))
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            FilledTonalButton(
+                            OutlinedButton(
                                 onClick = {
                                     clipboard.setText(AnnotatedString(DefaultPaymentHelper.ADB_GRANT_COMMAND))
                                     copiedAdb = true
@@ -174,7 +183,7 @@ fun SettingsSheet(
                             ) {
                                 Icon(Icons.Rounded.ContentCopy, contentDescription = null, modifier = Modifier.size(16.dp))
                                 Spacer(Modifier.width(6.dp))
-                                Text(if (copiedAdb) "Скопировано" else "Копировать")
+                                Text(if (copiedAdb) "Скопировано" else "ADB-команда")
                             }
                             OutlinedButton(
                                 onClick = onRecheckPermission,

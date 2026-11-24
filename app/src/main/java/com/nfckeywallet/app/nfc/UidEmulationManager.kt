@@ -49,7 +49,7 @@ data class UidDiagnosticsReport(
     val summary: String
 ) {
     fun toCopyableText(): String = buildString {
-        appendLine("=== NFC Ключница v2.0.0 Диагностика UID ===")
+        appendLine("=== NFC Ключница v2.1.0 Диагностика UID ===")
         appendLine("Устройство: $deviceModel")
         appendLine("Android: $androidVersion (API $apiLevel)")
         appendLine("WRITE_SECURE_SETTINGS: ${if (hasWriteSecureSettings) "ДА" else "НЕТ"}")

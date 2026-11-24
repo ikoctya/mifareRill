@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Used solely to connect to local 127.0.0.1 Wireless Debugging daemon during 1-time setup -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.WRITE_SECURE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -85,6 +87,15 @@
         <receiver
             android:name=".nfc.RestorePaymentReceiver"
             android:exported="false" />
+
+        <!-- Shizuku binder provider for 1-tap permission grant without PC -->
+        <provider
+            android:name="rikka.shizuku.ShizukuProvider"
+            android:authorities="${applicationId}.shizuku"
+            android:enabled="true"
+            android:exported="true"
+            android:multiprocess="false"
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
 
     </application>
 

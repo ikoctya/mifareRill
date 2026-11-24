@@ -12,8 +12,8 @@ android {
         applicationId = "com.nfckeywallet.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 12
-        versionName = "2.0.0"
+        versionCode = 13
+        versionName = "2.1.0"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -72,4 +72,11 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+
+    // On-device permission grant: Shizuku + Wireless ADB (Android 11+)
+    implementation("dev.rikka.shizuku:api:13.1.5")
+    implementation("dev.rikka.shizuku:provider:13.1.5")
+    implementation("com.github.MuntashirAkon:libadb-android:3.1.1")
+    implementation("com.github.MuntashirAkon:sun-security-android:1.1")
+    implementation("org.conscrypt:conscrypt-android:2.5.3")
 }

@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.nfc.NfcAdapter
 import android.os.Build
 import android.os.Bundle
@@ -29,19 +30,23 @@ import com.nfckeywallet.app.nfc.DefaultPaymentHelper
 import com.nfckeywallet.app.nfc.InstalledPaymentApp
 import com.nfckeywallet.app.nfc.KeyHceService
 import com.nfckeywallet.app.nfc.NfcTagScanner
+import com.nfckeywallet.app.nfc.PermissionGrantManager
 import com.nfckeywallet.app.nfc.ScannedTagResult
 import com.nfckeywallet.app.nfc.UidBackendType
 import com.nfckeywallet.app.nfc.UidDiagnosticsReport
 import com.nfckeywallet.app.nfc.UidEmulationManager
 import com.nfckeywallet.app.nfc.UidEmulationStatus
+import com.nfckeywallet.app.nfc.WirelessAdbHelper
 import com.nfckeywallet.app.ui.AddEditKeySheet
 import com.nfckeywallet.app.ui.MainScreen
+import com.nfckeywallet.app.ui.PermissionSetupSheet
 import com.nfckeywallet.app.ui.SettingsSheet
 import com.nfckeywallet.app.ui.theme.NfcKeyWalletTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import rikka.shizuku.Shizuku
 
 class MainActivity : ComponentActivity() {
 
@@ -74,6 +79,19 @@ class MainActivity : ComponentActivity() {
     private var editingKeyState by mutableStateOf<NfcKey?>(null)
     private var scannedTagState by mutableStateOf<ScannedTagResult?>(null)
     private var showSettingsSheet by mutableStateOf(false)
+    private var showPermissionSetupSheet by mutableStateOf(false)
+    private var permissionSetupBusy by mutableStateOf(false)
+    private var permissionSetupStatus by mutableStateOf<String?>(null)
+
+    private val shizukuPermissionListener = Shizuku.OnRequestPermissionResultListener { requestCode, grantResult ->
+        if (requestCode == PermissionGrantManager.SHIZUKU_PERMISSION_REQUEST_CODE) {
+            if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                runShizukuGrant()
+            } else {
+                permissionSetupStatus = "Доступ в Shizuku отклонён пользователем."
+            }
+        }
+    }
 
     private val defaultWalletLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -142,6 +160,8 @@ class MainActivity : ComponentActivity() {
         paymentHelper = walletApp.paymentHelper
         uidEmulationManager = walletApp.uidEmulationManager
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+
+        runCatching { Shizuku.addRequestPermissionResultListener(shizukuPermissionListener) }
 
         keysState = repository.getKeys()
         selectedKeyIdState = repository.getSelectedKeyId() ?: keysState.firstOrNull()?.id
@@ -278,6 +298,11 @@ class MainActivity : ComponentActivity() {
                         currentSystemLabel = currentSystemLabelState,
                         diagnosticsReport = diagnosticsReportState,
                         backupMessage = backupMessageState,
+                        onOpenPermissionSetup = {
+                            permissionSetupStatus = null
+                            showSettingsSheet = false
+                            showPermissionSetupSheet = true
+                        },
                         onRunDiagnostics = {
                             refreshSystemState()
                             lifecycleScope.launch(Dispatchers.IO) {
@@ -324,6 +349,79 @@ class MainActivity : ComponentActivity() {
                         },
                         onDismiss = { showSettingsSheet = false }
                     )
+                }
+
+                if (showPermissionSetupSheet) {
+                    PermissionSetupSheet(
+                        hasWriteSecureSettings = hasWriteSecureSettingsState,
+                        isBusy = permissionSetupBusy,
+                        statusMessage = permissionSetupStatus,
+                        onGrantViaWifi = { pairingPort, pairingCode, connectPort ->
+                            permissionSetupBusy = true
+                            permissionSetupStatus = "Подключаюсь к локальному Wireless ADB..."
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                val (ok, msg) = WirelessAdbHelper.pairAndGrantPermission(
+                                    context = this@MainActivity,
+                                    pairingPortInput = pairingPort,
+                                    pairingCode = pairingCode,
+                                    connectPortInput = connectPort
+                                )
+                                withContext(Dispatchers.Main) {
+                                    permissionSetupBusy = false
+                                    permissionSetupStatus = msg
+                                    refreshSystemState()
+                                    if (ok && keysState.isNotEmpty()) {
+                                        activatePriority()
+                                    }
+                                }
+                            }
+                        },
+                        onGrantViaShizuku = { runShizukuGrant() },
+                        onGrantViaRoot = {
+                            permissionSetupBusy = true
+                            permissionSetupStatus = "Запрашиваю Root (su)..."
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                val (ok, msg) = PermissionGrantManager.grantViaRoot(this@MainActivity)
+                                withContext(Dispatchers.Main) {
+                                    permissionSetupBusy = false
+                                    permissionSetupStatus = msg
+                                    refreshSystemState()
+                                    if (ok && keysState.isNotEmpty()) {
+                                        activatePriority()
+                                    }
+                                }
+                            }
+                        },
+                        onOpenDeveloperSettings = {
+                            runCatching {
+                                startActivity(Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS))
+                            }.onFailure {
+                                runCatching { startActivity(Intent(Settings.ACTION_SETTINGS)) }
+                            }
+                        },
+                        onDismiss = { showPermissionSetupSheet = false }
+                    )
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        runCatching { Shizuku.removeRequestPermissionResultListener(shizukuPermissionListener) }
+    }
+
+    private fun runShizukuGrant() {
+        permissionSetupBusy = true
+        permissionSetupStatus = "Подключаюсь к Shizuku..."
+        lifecycleScope.launch(Dispatchers.IO) {
+            val (ok, msg) = PermissionGrantManager.grantViaShizuku(this@MainActivity)
+            withContext(Dispatchers.Main) {
+                permissionSetupBusy = false
+                permissionSetupStatus = msg
+                refreshSystemState()
+                if (ok && keysState.isNotEmpty()) {
+                    activatePriority()
                 }
             }
         }
