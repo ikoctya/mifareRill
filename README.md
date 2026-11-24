@@ -4,6 +4,14 @@
 
 > **Проверено на реальном оборудовании:** Xiaomi HyperOS (Android 16, API 36, без root) успешно открывает домофон **Beward (MIFARE)** на профилях `HCE + UID (20)` и `MIFARE+HCE (28)` с перевёрнутым порядком байт.
 
+## Скриншоты
+
+<p align="center">
+  <img src="docs/screenshots/main.jpg" width="260" alt="Главный экран и активный ключ" />
+  <img src="docs/screenshots/add_key.jpg" width="260" alt="Добавление NFC-ключа" />
+  <img src="docs/screenshots/settings.jpg" width="260" alt="Настройки переключения NFC" />
+</p>
+
 ## Основные возможности
 
 - **Реальная эмуляция аппаратного ISO 14443-A UID (без root на Android 15/16)** — использует Raw NCI (`IDLE → CORE_SET_CONFIG [ATQA + SAK + LA_NFCID1] → resetDiscoveryTechnology → CORE_GET_CONFIG`) и `NfcOemExtension` через одноразовое ADB-право `WRITE_SECURE_SETTINGS` (также есть опциональный Root-бэкенд).
