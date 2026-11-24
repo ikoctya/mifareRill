@@ -6,11 +6,13 @@
 
 ## Скриншоты
 
-<p align="center">
-  <img src="docs/screenshots/main.jpg" width="260" alt="Главный экран и активный ключ" />
-  <img src="docs/screenshots/add_key.jpg" width="260" alt="Добавление NFC-ключа" />
-  <img src="docs/screenshots/settings.jpg" width="260" alt="Настройки переключения NFC" />
-</p>
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/main.jpg" height="460" alt="Главный экран и активный ключ" /><br/><sub><b>Главный экран</b></sub></td>
+    <td align="center"><img src="docs/screenshots/add_key.jpg" height="460" alt="Добавление NFC-ключа" /><br/><sub><b>Добавление ключа</b></sub></td>
+    <td align="center"><img src="docs/screenshots/settings.jpg" height="460" alt="Настройки переключения NFC" /><br/><sub><b>Настройки NFC</b></sub></td>
+  </tr>
+</table>
 
 ## Основные возможности
 
