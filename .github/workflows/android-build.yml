@@ -1,9 +1,12 @@
-name: Build Android APK
+name: Build & Release Android APK
 
 on:
   push:
     branches: [ "main" ]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -28,8 +31,29 @@ jobs:
       - name: Build Release APK
         run: ./gradlew :app:assembleRelease --no-daemon --stacktrace
 
+      - name: Prepare versioned APK
+        id: meta
+        run: |
+          VERSION=$(grep 'versionName' app/build.gradle.kts | head -n 1 | sed -E 's/.*"([^"]+)".*/\1/')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          cp app/build/outputs/apk/release/app-release.apk "mifareRill-v${VERSION}.apk"
+
       - name: Upload Release APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: mifareRill-release-apk
-          path: app/build/outputs/apk/release/app-release.apk
+          name: mifareRill-v${{ steps.meta.outputs.version }}-apk
+          path: mifareRill-v${{ steps.meta.outputs.version }}.apk
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="v${{ steps.meta.outputs.version }}"
+          APK="mifareRill-${TAG}.apk"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$APK" --clobber
+          else
+            gh release create "$TAG" "$APK" \
+              --title "mifareRill $TAG" \
+              --notes "Automated release APK build for mifareRill $TAG (on-device WRITE_SECURE_SETTINGS via Wireless ADB / Shizuku / Root + hardware UID emulation)."
+          fi
