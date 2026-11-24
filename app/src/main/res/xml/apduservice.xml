@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<host-apdu-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/hce_service_description"
+    android:requireDeviceUnlock="false">
+
+    <!-- Payment category so the app can appear in Default Payment App settings and take foreground priority -->
+    <aid-group
+        android:category="payment"
+        android:description="@string/aid_group_payment">
+        <!-- PPSE (2PAY.SYS.DDF01) -->
+        <aid-filter android:name="325041592E5359532E4444463031" />
+        <!-- Custom Payment/Access fallback AID -->
+        <aid-filter android:name="F04E46434B455901" />
+    </aid-group>
+
+    <!-- Other category for NDEF Type 4 Tag and custom access/key AIDs -->
+    <aid-group
+        android:category="other"
+        android:description="@string/aid_group_other">
+        <!-- NFC Forum NDEF Type 4 Tag Application -->
+        <aid-filter android:name="D2760000850101" />
+        <!-- Standard custom access control AIDs -->
+        <aid-filter android:name="F0010203040506" />
+        <aid-filter android:name="F222222222" />
+        <aid-filter android:name="A0000002471001" />
+    </aid-group>
+
+</host-apdu-service>

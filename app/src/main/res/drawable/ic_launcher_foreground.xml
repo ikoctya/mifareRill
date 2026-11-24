@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Stylized NFC Key icon -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M43,54m-13,0a13,13 0,1 1,26 0a13,13 0,1 1,-26 0" />
+    <path
+        android:fillColor="#1A237E"
+        android:pathData="M43,54m-5.5,0a5.5,5.5 0,1 1,11 0a5.5,5.5 0,1 1,-11 0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M53,50 L77,50 L77,57 L71,57 L71,63 L65,63 L65,57 L53,57 Z" />
+    <!-- NFC Wave arcs -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M62,36 A18,18 0 0,1 74,44"
+        android:strokeWidth="3.5"
+        android:strokeColor="#80D8FF"
+        android:strokeLineCap="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M66,28 A26,26 0 0,1 83,40"
+        android:strokeWidth="3.5"
+        android:strokeColor="#40C4FF"
+        android:strokeLineCap="round" />
+</vector>

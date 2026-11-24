@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Monochrome Quick Settings Tile icon: NFC Key -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M7.5,14A3.5,3.5 0,1 1,11 10.5A3.5,3.5 0,0 1,7.5 14M7.5,9A1.5,1.5 0,1 0,9 10.5A1.5,1.5 0,0 0,7.5 9M10.8,9.5L21,9.5L21,11.5L19,11.5L19,14L17,14L17,11.5L15,11.5L15,13L13,13L13,11.5L10.8,11.5Z" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M14,6.2 A5.5,5.5 0,0 1,18.2 7.8"
+        android:strokeWidth="1.6"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M15.2,3.6 A8.5,8.5 0,0 1,21 6.4"
+        android:strokeWidth="1.6"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round" />
+</vector>

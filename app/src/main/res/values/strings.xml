@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NFC Ключница</string>
+    <string name="qs_tile_label">NFC Ключ</string>
+    <string name="hce_service_description">NFC Ключница — эмуляция ключей и меток</string>
+    <string name="aid_group_payment">Эмуляция ключей (приоритет оплаты)</string>
+    <string name="aid_group_other">NFC-метки NDEF и СКУД-ключи</string>
+</resources>
