@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <!-- Used solely to connect to local 127.0.0.1 Wireless Debugging daemon during 1-time setup -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission
         android:name="android.permission.WRITE_SECURE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -70,6 +72,12 @@
                 android:name="android.service.quicksettings.ACTIVE_TILE"
                 android:value="false" />
         </service>
+
+        <!-- Foreground mDNS + RemoteInput notification service for 1-step Wireless ADB pairing -->
+        <service
+            android:name=".nfc.WirelessAdbPairingService"
+            android:exported="false"
+            android:foregroundServiceType="shortService" />
 
         <service
             android:name=".nfc.KeyHceService"

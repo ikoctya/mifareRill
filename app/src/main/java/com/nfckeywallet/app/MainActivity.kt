@@ -1,5 +1,6 @@
 package com.nfckeywallet.app
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -37,6 +38,7 @@ import com.nfckeywallet.app.nfc.UidDiagnosticsReport
 import com.nfckeywallet.app.nfc.UidEmulationManager
 import com.nfckeywallet.app.nfc.UidEmulationStatus
 import com.nfckeywallet.app.nfc.WirelessAdbHelper
+import com.nfckeywallet.app.nfc.WirelessAdbPairingService
 import com.nfckeywallet.app.ui.AddEditKeySheet
 import com.nfckeywallet.app.ui.MainScreen
 import com.nfckeywallet.app.ui.PermissionSetupSheet
@@ -82,6 +84,12 @@ class MainActivity : ComponentActivity() {
     private var showPermissionSetupSheet by mutableStateOf(false)
     private var permissionSetupBusy by mutableStateOf(false)
     private var permissionSetupStatus by mutableStateOf<String?>(null)
+
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        launchWifiPairingServiceAndSettings()
+    }
 
     private val shizukuPermissionListener = Shizuku.OnRequestPermissionResultListener { requestCode, grantResult ->
         if (requestCode == PermissionGrantManager.SHIZUKU_PERMISSION_REQUEST_CODE) {
@@ -148,6 +156,22 @@ class MainActivity : ComponentActivity() {
                 if (isSystemDefaultSwitchedState) {
                     walletApp.scheduleRestoreAfterSeconds(shortened)
                 }
+            }
+        }
+    }
+
+    private val wifiPairingReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action != WirelessAdbPairingService.ACTION_PAIRING_STATUS) return
+            val granted = intent.getBooleanExtra(WirelessAdbPairingService.EXTRA_GRANTED, false)
+            val msg = intent.getStringExtra(WirelessAdbPairingService.EXTRA_MESSAGE)
+            permissionSetupBusy = false
+            if (!msg.isNullOrBlank()) {
+                permissionSetupStatus = msg
+            }
+            refreshSystemState()
+            if (granted && keysState.isNotEmpty()) {
+                activatePriority()
             }
         }
     }
@@ -228,6 +252,7 @@ class MainActivity : ComponentActivity() {
                     isSystemDefaultSwitched = isSystemDefaultSwitchedState,
                     hasWriteSecureSettings = hasWriteSecureSettingsState,
                     uidStatus = uidStatusState,
+                    returnWalletLabel = autoDetectedPreviousLabelState,
                     remainingSeconds = remainingSecondsState,
                     settings = settingsState,
                     lastTapMessage = lastTapMessageState,
@@ -250,6 +275,10 @@ class MainActivity : ComponentActivity() {
                         backupMessageState = null
                         refreshSystemState()
                         showSettingsSheet = true
+                    },
+                    onOpenPermissionSetup = {
+                        permissionSetupStatus = null
+                        showPermissionSetupSheet = true
                     },
                     onActivatePriority = { activatePriority() },
                     onReleasePriority = { deactivatePriority() },
@@ -356,7 +385,9 @@ class MainActivity : ComponentActivity() {
                         hasWriteSecureSettings = hasWriteSecureSettingsState,
                         isBusy = permissionSetupBusy,
                         statusMessage = permissionSetupStatus,
-                        onGrantViaWifi = { pairingPort, pairingCode, connectPort ->
+                        onAutoSetup = { runSmartAutoSetup() },
+                        onStartWifiNotificationWizard = { startWifiNotificationWizard() },
+                        onGrantViaWifiManual = { pairingPort, pairingCode, connectPort ->
                             permissionSetupBusy = true
                             permissionSetupStatus = "Подключаюсь к локальному Wireless ADB..."
                             lifecycleScope.launch(Dispatchers.IO) {
@@ -377,28 +408,7 @@ class MainActivity : ComponentActivity() {
                             }
                         },
                         onGrantViaShizuku = { runShizukuGrant() },
-                        onGrantViaRoot = {
-                            permissionSetupBusy = true
-                            permissionSetupStatus = "Запрашиваю Root (su)..."
-                            lifecycleScope.launch(Dispatchers.IO) {
-                                val (ok, msg) = PermissionGrantManager.grantViaRoot(this@MainActivity)
-                                withContext(Dispatchers.Main) {
-                                    permissionSetupBusy = false
-                                    permissionSetupStatus = msg
-                                    refreshSystemState()
-                                    if (ok && keysState.isNotEmpty()) {
-                                        activatePriority()
-                                    }
-                                }
-                            }
-                        },
-                        onOpenDeveloperSettings = {
-                            runCatching {
-                                startActivity(Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS))
-                            }.onFailure {
-                                runCatching { startActivity(Intent(Settings.ACTION_SETTINGS)) }
-                            }
-                        },
+                        onGrantViaRoot = { runRootGrant() },
                         onDismiss = { showPermissionSetupSheet = false }
                     )
                 }
@@ -409,6 +419,35 @@ class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         runCatching { Shizuku.removeRequestPermissionResultListener(shizukuPermissionListener) }
+    }
+
+    private fun runSmartAutoSetup() {
+        when {
+            PermissionGrantManager.isShizukuAvailable() -> runShizukuGrant()
+            PermissionGrantManager.isRootLikelyAvailable() -> runRootGrant()
+            else -> startWifiNotificationWizard()
+        }
+    }
+
+    private fun startWifiNotificationWizard() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            return
+        }
+        launchWifiPairingServiceAndSettings()
+    }
+
+    private fun launchWifiPairingServiceAndSettings() {
+        WirelessAdbPairingService.startPairing(this)
+        permissionSetupStatus = "Поиск Wi-Fi запущен! Включите «Отладка по Wi-Fi» → «Подключить по коду» и введите 6 цифр в уведомлении сверху."
+        runCatching {
+            startActivity(Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS))
+        }.onFailure {
+            runCatching { startActivity(Intent(Settings.ACTION_SETTINGS)) }
+        }
     }
 
     private fun runShizukuGrant() {
@@ -427,15 +466,36 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun runRootGrant() {
+        permissionSetupBusy = true
+        permissionSetupStatus = "Запрашиваю Root (su)..."
+        lifecycleScope.launch(Dispatchers.IO) {
+            val (ok, msg) = PermissionGrantManager.grantViaRoot(this@MainActivity)
+            withContext(Dispatchers.Main) {
+                permissionSetupBusy = false
+                permissionSetupStatus = msg
+                refreshSystemState()
+                if (ok && keysState.isNotEmpty()) {
+                    activatePriority()
+                }
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         refreshSystemState()
 
-        val filter = IntentFilter(KeyHceService.ACTION_NFC_TAP_EVENT)
         ContextCompat.registerReceiver(
             this,
             tapReceiver,
-            filter,
+            IntentFilter(KeyHceService.ACTION_NFC_TAP_EVENT),
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+        ContextCompat.registerReceiver(
+            this,
+            wifiPairingReceiver,
+            IntentFilter(WirelessAdbPairingService.ACTION_PAIRING_STATUS),
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
 
@@ -456,6 +516,7 @@ class MainActivity : ComponentActivity() {
     override fun onPause() {
         super.onPause()
         runCatching { unregisterReceiver(tapReceiver) }
+        runCatching { unregisterReceiver(wifiPairingReceiver) }
         disableTagScanningMode()
         paymentHelper.releaseForegroundPriority(this)
 

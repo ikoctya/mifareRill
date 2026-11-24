@@ -3,13 +3,15 @@ package com.nfckeywallet.app.nfc
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import rikka.shizuku.Shizuku
 import java.io.BufferedReader
+import java.io.File
 import java.io.InputStreamReader
 
 /**
  * Unified helper for granting android.permission.WRITE_SECURE_SETTINGS directly on-device:
- * 1. Built-in Wireless Debugging (Android 11+, no PC, no third-party apps)
+ * 1. Built-in Wireless Debugging (Android 11+, mDNS + RemoteInput notification, no PC)
  * 2. Shizuku (1-tap via Shizuku binder)
  * 3. Root (1-tap via su)
  */
@@ -26,6 +28,25 @@ object PermissionGrantManager {
             Shizuku.pingBinder() &&
                 Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
         }.getOrDefault(false)
+    }
+
+    fun isRootLikelyAvailable(): Boolean {
+        val paths = arrayOf(
+            "/system/bin/su",
+            "/system/xbin/su",
+            "/sbin/su",
+            "/su/bin/su",
+            "/data/local/su",
+            "/data/local/bin/su"
+        )
+        return paths.any { File(it).exists() }
+    }
+
+    fun isXiaomiDevice(): Boolean {
+        val m = Build.MANUFACTURER.lowercase()
+        val b = Build.BRAND.lowercase()
+        return m.contains("xiaomi") || m.contains("redmi") || m.contains("poco") ||
+            b.contains("xiaomi") || b.contains("redmi") || b.contains("poco")
     }
 
     fun requestShizukuPermission(): Boolean {
@@ -46,7 +67,7 @@ object PermissionGrantManager {
         }
         if (!hasShizukuPermission()) {
             requestShizukuPermission()
-            return false to "Подтвердите запрос Shizuku во всплывающем окне и нажмите ещё раз."
+            return false to "Подтвердите запрос Shizuku во всплывающем окне — право выдастся автоматически."
         }
         return try {
             val newProcessMethod = Shizuku::class.java.getDeclaredMethod(
