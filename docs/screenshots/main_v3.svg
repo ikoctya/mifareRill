@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 820" width="390" height="820">
+  <defs>
+    <radialGradient id="radarGlow" cx="72%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="heroClip">
+      <rect x="20" y="96" width="350" height="248" rx="22"/>
+    </clipPath>
+  </defs>
+  <!-- Phone frame -->
+  <rect x="2" y="2" width="386" height="816" rx="40" fill="#090B0E" stroke="#232C38" stroke-width="2"/>
+  <!-- Status bar -->
+  <text x="32" y="32" fill="#8A94A6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="13" font-weight="600">00:20</text>
+  <circle cx="195" cy="24" r="7" fill="#151B23"/>
+  <text x="326" y="32" fill="#8A94A6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12" font-weight="600">5G 98%</text>
+
+  <!-- Top App Bar -->
+  <rect x="20" y="50" width="32" height="32" rx="9" fill="#151B23" stroke="#232C38"/>
+  <circle cx="32" cy="66" r="5" fill="none" stroke="#34D399" stroke-width="1.8"/>
+  <line x1="37" y1="66" x2="46" y2="66" stroke="#34D399" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="38" cy="66" r="1.8" fill="#EF4444"/>
+  <text x="62" y="72" fill="#F3F6FA" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="20" font-weight="700">mifareRill</text>
+  <rect x="168" y="54" width="70" height="24" rx="8" fill="#0D2820" stroke="#165B45"/>
+  <text x="203" y="70" text-anchor="middle" fill="#34D399" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="11" font-weight="700">RAW NCI</text>
+  <!-- Settings gear icon -->
+  <circle cx="354" cy="66" r="7" fill="none" stroke="#8A94A6" stroke-width="1.8"/>
+  <circle cx="354" cy="66" r="2.5" fill="#8A94A6"/>
+
+  <!-- Unified A3 Cockpit Hero Card -->
+  <rect x="20" y="96" width="350" height="248" rx="22" fill="#11151B" stroke="#165B45" stroke-width="1.2"/>
+  <g clip-path="url(#heroClip)">
+    <rect x="20" y="96" width="350" height="248" fill="url(#radarGlow)"/>
+    <circle cx="272" cy="208" r="46" fill="none" stroke="#10B981" stroke-opacity="0.30" stroke-width="1.5"/>
+    <circle cx="272" cy="208" r="80" fill="none" stroke="#10B981" stroke-opacity="0.20" stroke-width="1.5"/>
+    <circle cx="272" cy="208" r="114" fill="none" stroke="#10B981" stroke-opacity="0.12" stroke-width="1.5"/>
+    <circle cx="272" cy="208" r="148" fill="none" stroke="#10B981" stroke-opacity="0.06" stroke-width="1.5"/>
+    <!-- Bottom progress bar -->
+    <rect x="20" y="340" width="350" height="4" fill="#1B222C"/>
+    <rect x="20" y="340" width="278" height="4" fill="#34D399"/>
+  </g>
+
+  <!-- Hero Top Row -->
+  <circle cx="44" cy="126" r="5" fill="#34D399"/>
+  <text x="58" y="131" fill="#F3F6FA" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="13" font-weight="600" letter-spacing="0.5">В ЭФИРЕ • 24с</text>
+  <path d="M338,129 L348,119 L352,123 L342,133 L337,134 Z" fill="none" stroke="#8A94A6" stroke-width="1.5"/>
+
+  <!-- Hero Title & UID -->
+  <text x="38" y="192" fill="#F3F6FA" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="30" font-weight="700">Подъезд</text>
+  <text x="38" y="218" fill="#8A94A6" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="15">UID 53:4D:AE:74</text>
+
+  <!-- Micro-chips -->
+  <rect x="38" y="246" width="70" height="28" rx="8" fill="#171D26" stroke="#232C38"/>
+  <text x="73" y="264" text-anchor="middle" fill="#E2E8F0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12" font-weight="600">SAK 28</text>
+  <rect x="116" y="246" width="84" height="28" rx="8" fill="#171D26" stroke="#232C38"/>
+  <text x="158" y="264" text-anchor="middle" fill="#E2E8F0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12" font-weight="600">Байты ⇄</text>
+  <rect x="38" y="282" width="146" height="28" rx="8" fill="#171D26" stroke="#232C38"/>
+  <text x="111" y="300" text-anchor="middle" fill="#E2E8F0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12" font-weight="600">Яндекс Пэй → авто</text>
+
+  <!-- Symmetrical Action Buttons -->
+  <rect x="20" y="358" width="170" height="48" rx="14" fill="#0D2820" stroke="#165B45" stroke-width="1.2"/>
+  <text x="105" y="387" text-anchor="middle" fill="#34D399" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="14" font-weight="700">+30 сек</text>
+
+  <rect x="200" y="358" width="170" height="48" rx="14" fill="#2B1215" stroke="#5C2228" stroke-width="1.2"/>
+  <text x="285" y="387" text-anchor="middle" fill="#F87171" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="14" font-weight="700">Вернуть оплату</text>
+
+  <!-- 2-Column Stealth Key Grid -->
+  <!-- Tile 1 (Selected) -->
+  <rect x="20" y="422" width="169" height="106" rx="16" fill="#11151B" stroke="#165B45" stroke-width="1.2"/>
+  <circle cx="42" cy="444" r="6" fill="none" stroke="#34D399" stroke-width="2"/>
+  <line x1="48" y1="444" x2="58" y2="444" stroke="#34D399" stroke-width="2" stroke-linecap="round"/>
+  <text x="36" y="490" fill="#F3F6FA" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="16" font-weight="600">Подъезд</text>
+  <text x="36" y="510" fill="#34D399" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12">Домофон • SAK 28</text>
+
+  <!-- Tile 2 -->
+  <rect x="201" y="422" width="169" height="106" rx="16" fill="#11151B" stroke="#232C38" stroke-width="1"/>
+  <rect x="217" y="438" width="16" height="16" rx="3" fill="none" stroke="#8A94A6" stroke-width="1.8"/>
+  <text x="217" y="490" fill="#F3F6FA" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="16" font-weight="600">Офис</text>
+  <text x="217" y="510" fill="#8A94A6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12">Пропуск • SAK 20</text>
+
+  <!-- Tile 3 -->
+  <rect x="20" y="540" width="169" height="106" rx="16" fill="#11151B" stroke="#232C38" stroke-width="1"/>
+  <path d="M36,568 L44,560 L52,568 L52,576 L36,576 Z" fill="none" stroke="#8A94A6" stroke-width="1.8"/>
+  <text x="36" y="608" fill="#F3F6FA" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="16" font-weight="600">Гараж</text>
+  <text x="36" y="628" fill="#8A94A6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12">Ворота • SAK 28</text>
+
+  <!-- Tile 4 (+ Добавить) -->
+  <rect x="201" y="540" width="169" height="106" rx="16" fill="#0D1015" stroke="#232C38" stroke-width="1"/>
+  <text x="285" y="598" text-anchor="middle" fill="#8A94A6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="16" font-weight="600"><tspan fill="#F87171" font-size="19">+ </tspan>Добавить</text>
+
+  <!-- Nav pill -->
+  <rect x="135" y="800" width="120" height="4" rx="2" fill="#334155"/>
+</svg>

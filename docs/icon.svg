@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="128" height="128">
+  <rect width="108" height="108" rx="24" fill="#090B0E"/>
+  <circle cx="54" cy="54" r="44" fill="#0E1319" stroke="#1D2630" stroke-width="1.2"/>
+  <!-- Top neon emerald NFC signal arcs -->
+  <path d="M39,30.5 Q54,20.5 69,30.5" fill="none" stroke="#10B981" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M43.5,36 Q54,28.8 64.5,36" fill="none" stroke="#34D399" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M48,41.2 Q54,37 60,41.2" fill="none" stroke="#34D399" stroke-width="2.4" stroke-linecap="round"/>
+  <!-- Bottom NFC signal arcs -->
+  <path d="M48,66.8 Q54,71 60,66.8" fill="none" stroke="#EF4444" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M43.5,72 Q54,79.2 64.5,72" fill="none" stroke="#34D399" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M39,77.5 Q54,87.5 69,77.5" fill="none" stroke="#10B981" stroke-width="2.4" stroke-linecap="round"/>
+  <!-- Cyber-Key metallic silhouette -->
+  <path d="M36,41 C28.8,41 23,46.8 23,54 C23,61.2 28.8,67 36,67 C41.4,67 46.1,63.7 48,59 L55,59 L58,62 L62,59 L66,62 L71,59 L78,59 L84,54 L78,49 L48,49 C46.1,44.3 41.4,41 36,41 Z" fill="#131920" stroke="#34D399" stroke-width="2.2" stroke-linejoin="round"/>
+  <!-- Inner emerald NFC waves inside key bow -->
+  <path d="M30,48.2 Q35,54 30,59.8" fill="none" stroke="#34D399" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M35.5,45.5 Q42.5,54 35.5,62.5" fill="none" stroke="#10B981" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Crimson red glowing core accent -->
+  <path d="M42,61.5 Q47,57 52,55.5 L62,55.5" fill="none" stroke="#EF4444" stroke-width="2.8" stroke-linecap="round"/>
+  <circle cx="48.5" cy="54" r="2.3" fill="#FF3B5C"/>
+  <path d="M53,52.5 L77,52.5" fill="none" stroke="#10B981" stroke-width="1.8" stroke-linecap="round"/>
+</svg>

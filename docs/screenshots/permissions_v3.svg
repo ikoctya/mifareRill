@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 820" width="390" height="820">
+  <!-- Phone frame -->
+  <rect x="2" y="2" width="386" height="816" rx="40" fill="#090B0E" stroke="#232C38" stroke-width="2"/>
+  <text x="32" y="32" fill="#8A94A6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="13" font-weight="600">00:21</text>
+  <circle cx="195" cy="24" r="7" fill="#151B23"/>
+  <text x="326" y="32" fill="#8A94A6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12" font-weight="600">Wi-Fi 98%</text>
+
+  <!-- Bottom Sheet container -->
+  <rect x="8" y="64" width="374" height="744" rx="28" fill="#11151B" stroke="#232C38" stroke-width="1"/>
+  <rect x="172" y="78" width="46" height="4" rx="2" fill="#334155"/>
+
+  <!-- Header -->
+  <text x="28" y="118" fill="#F3F6FA" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="22" font-weight="700">Выдача права без ПК</text>
+  <text x="28" y="140" fill="#8A94A6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12">Разовая настройка WRITE_SECURE_SETTINGS для UID</text>
+  <text x="28" y="156" fill="#8A94A6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12">и автоматического возврата приложения оплаты.</text>
+
+  <!-- Primary Smart Auto-Setup Card -->
+  <rect x="24" y="176" width="342" height="156" rx="18" fill="#0D2820" stroke="#165B45" stroke-width="1.2"/>
+  <text x="42" y="206" fill="#34D399" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="15" font-weight="700">✦ Быстрая авто-настройка</text>
+  <text x="42" y="228" fill="#CBD5E1" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12">Запущу поиск Wi-Fi и открою Настройки — введите</text>
+  <text x="42" y="244" fill="#CBD5E1" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12">только 6 цифр в уведомлении (без портов и ПК).</text>
+
+  <!-- Primary Emerald 48dp Button -->
+  <rect x="42" y="266" width="306" height="48" rx="12" fill="#10B981"/>
+  <text x="195" y="295" text-anchor="middle" fill="#031F16" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="14" font-weight="700">Настроить автоматически</text>
+
+  <!-- Xiaomi Hint Banner -->
+  <rect x="24" y="344" width="342" height="58" rx="12" fill="#2B1215" stroke="#5C2228"/>
+  <text x="38" y="366" fill="#F87171" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700">⚠ Xiaomi / HyperOS</text>
+  <text x="38" y="386" fill="#F3F6FA" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="11.5">Включите «Отладка по USB (Настройки безопасности)»</text>
+
+  <!-- Manual options header -->
+  <rect x="24" y="416" width="342" height="44" rx="12" fill="#151B23" stroke="#232C38"/>
+  <text x="38" y="443" fill="#F3F6FA" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="12.5" font-weight="600">Выбрать способ вручную (Wi-Fi / Shizuku / Root)</text>
+
+  <!-- Method 1 Card -->
+  <rect x="24" y="472" width="342" height="106" rx="16" fill="#151B23" stroke="#232C38"/>
+  <text x="40" y="498" fill="#F3F6FA" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="13.5" font-weight="600">1. По Wi-Fi (уведомление с кодом)</text>
+  <rect x="296" y="483" width="56" height="20" rx="6" fill="#0D2820"/>
+  <text x="324" y="497" text-anchor="middle" fill="#34D399" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="10.5" font-weight="600">Без ПК</text>
+  <rect x="40" y="514" width="310" height="48" rx="12" fill="#1A222C" stroke="#232C38"/>
+  <text x="195" y="543" text-anchor="middle" fill="#F3F6FA" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="13.5" font-weight="600">Запустить Wi-Fi уведомление</text>
+
+  <!-- Method 2 Card -->
+  <rect x="24" y="590" width="342" height="96" rx="16" fill="#151B23" stroke="#232C38"/>
+  <text x="40" y="616" fill="#F3F6FA" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="13.5" font-weight="600">2. Через Shizuku</text>
+  <rect x="282" y="601" width="70" height="20" rx="6" fill="#0D2820"/>
+  <text x="317" y="615" text-anchor="middle" fill="#34D399" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="10.5" font-weight="600">Запущен</text>
+  <rect x="40" y="628" width="310" height="48" rx="12" fill="#1A222C" stroke="#232C38"/>
+  <text x="195" y="657" text-anchor="middle" fill="#F3F6FA" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="13.5" font-weight="600">Выдать через Shizuku</text>
+
+  <!-- Method 3 Card -->
+  <rect x="24" y="698" width="342" height="96" rx="16" fill="#151B23" stroke="#232C38"/>
+  <text x="40" y="724" fill="#F3F6FA" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="13.5" font-weight="600">3. Через Root (Magisk / KernelSU)</text>
+  <rect x="40" y="736" width="310" height="48" rx="12" fill="#1A222C" stroke="#232C38"/>
+  <text x="195" y="765" text-anchor="middle" fill="#F3F6FA" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="13.5" font-weight="600">Выдать через Root (su)</text>
+</svg>
