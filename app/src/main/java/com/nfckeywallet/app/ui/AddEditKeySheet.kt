@@ -259,7 +259,7 @@ fun AddEditKeySheet(
                 value = uidHex,
                 onValueChange = { uidHex = it.uppercase() },
                 label = { Text("UID ключа (HEX)") },
-                placeholder = { Text("Например: 74:AE:4D:53") },
+                placeholder = { Text("Например: A1:B2:C3:D4") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(14.dp)
