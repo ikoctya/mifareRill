@@ -1,8 +1,32 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
+
+val keystorePropsFile = rootProject.file("keystore.properties")
+val keystoreProps = Properties().apply {
+    if (keystorePropsFile.exists()) {
+        keystorePropsFile.inputStream().use { load(it) }
+    }
+}
+
+val releaseStoreFilePath: String? = keystoreProps.getProperty("storeFile")
+    ?: System.getenv("RELEASE_KEYSTORE_PATH")
+val releaseStorePassword: String? = keystoreProps.getProperty("storePassword")
+    ?: System.getenv("RELEASE_KEYSTORE_PASSWORD")
+val releaseKeyAlias: String? = keystoreProps.getProperty("keyAlias")
+    ?: System.getenv("RELEASE_KEY_ALIAS")
+val releaseKeyPassword: String? = keystoreProps.getProperty("keyPassword")
+    ?: System.getenv("RELEASE_KEY_PASSWORD")
+
+val hasReleaseSigning = !releaseStoreFilePath.isNullOrBlank() &&
+    file(releaseStoreFilePath).exists() &&
+    !releaseStorePassword.isNullOrBlank() &&
+    !releaseKeyAlias.isNullOrBlank() &&
+    !releaseKeyPassword.isNullOrBlank()
 
 android {
     namespace = "com.nfckeywallet.app"
@@ -12,18 +36,33 @@ android {
         applicationId = "com.nfckeywallet.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 17
-        versionName = "3.0.1"
+        versionCode = 18
+        versionName = "3.0.2"
 
         vectorDrawables {
             useSupportLibrary = true
         }
     }
 
+    signingConfigs {
+        create("release") {
+            if (hasReleaseSigning) {
+                storeFile = file(releaseStoreFilePath!!)
+                storePassword = releaseStorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (hasReleaseSigning) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
