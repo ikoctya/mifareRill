@@ -88,4 +88,4 @@ adb shell pm grant com.nfckeywallet.app android.permission.WRITE_SECURE_SETTINGS
 UQCDxpB4BUPjxL-phj-ihrTiR5SLzKozvoKRSkp9ZMwgyJc3
 ```
 
-[Открыть в TON-кошельке](ton://transfer/UQCDxpB4BUPjxL-phj-ihrTiR5SLzKozvoKRSkp9ZMwgyJc3)
+[Отправить USDT в Tonkeeper](https://app.tonkeeper.com/transfer/UQCDxpB4BUPjxL-phj-ihrTiR5SLzKozvoKRSkp9ZMwgyJc3?jetton=EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs) · [Открыть в Tonviewer](https://tonviewer.com/UQCDxpB4BUPjxL-phj-ihrTiR5SLzKozvoKRSkp9ZMwgyJc3)
