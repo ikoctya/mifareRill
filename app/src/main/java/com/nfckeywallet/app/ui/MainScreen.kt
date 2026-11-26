@@ -59,6 +59,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -111,18 +112,14 @@ fun MainScreen(
             TopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Surface(
-                            shape = RoundedCornerShape(9.dp),
-                            color = StealthColors.SurfaceElevated,
-                            border = BorderStroke(1.dp, StealthColors.Border),
-                            modifier = Modifier.size(30.dp)
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_brand_logo),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(RoundedCornerShape(9.dp))
+                        )
                         Spacer(Modifier.width(10.dp))
                         Text(
                             text = "mifareRill",
@@ -217,7 +214,7 @@ fun MainScreen(
             }
 
             if (selectedKey != null) {
-                // Unified A3 Cockpit Hero Card
+                // Unified A3 Cockpit Hero Card (colored with user's chosen key color)
                 item(span = { GridItemSpan(2) }) {
                     UnifiedCockpitHeroCard(
                         key = selectedKey,
@@ -250,7 +247,7 @@ fun MainScreen(
                 }
             }
 
-            // 2-Column Stealth Key Grid + inline "+ Добавить" tile
+            // 2-Column Stealth Key Grid (each tile tinted with its chosen key color) + "+ Добавить"
             items(keys, key = { it.id }) { keyItem ->
                 StealthKeyTile(
                     key = keyItem,
@@ -280,6 +277,7 @@ private fun UnifiedCockpitHeroCard(
     onEdit: () -> Unit,
     onTapCard: () -> Unit
 ) {
+    val colorPreset = KeyPresets.colorFor(key.colorId)
     val infiniteTransition = rememberInfiniteTransition(label = "radarPulse")
     val pulsePhase by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -292,7 +290,7 @@ private fun UnifiedCockpitHeroCard(
     )
 
     val isLive = isPriorityActive && (isSystemDefaultSwitched || uidActive)
-    val accent = if (isLive) StealthColors.EmeraldBright else if (isPriorityActive) StealthColors.Amber else StealthColors.CrimsonBright
+    val statusDotColor = if (isLive) StealthColors.EmeraldBright else if (isPriorityActive) StealthColors.Amber else StealthColors.CrimsonBright
 
     val statusText = when {
         isPriorityActive && totalSeconds > 0 && remainingSeconds > 0 -> "В ЭФИРЕ • ${remainingSeconds}с"
@@ -306,6 +304,14 @@ private fun UnifiedCockpitHeroCard(
         else -> (remainingSeconds.toFloat() / totalSeconds.toFloat()).coerceIn(0f, 1f)
     }
 
+    val cardTintBrush = Brush.linearGradient(
+        colors = listOf(
+            colorPreset.start.copy(alpha = if (isPriorityActive) 0.30f else 0.18f),
+            colorPreset.end.copy(alpha = if (isPriorityActive) 0.14f else 0.08f),
+            StealthColors.Surface
+        )
+    )
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -314,24 +320,25 @@ private fun UnifiedCockpitHeroCard(
         shape = RoundedCornerShape(22.dp),
         color = StealthColors.Surface,
         border = BorderStroke(
-            width = 1.dp,
-            color = if (isLive) StealthColors.EmeraldBorder else StealthColors.Border
+            width = 1.2.dp,
+            color = colorPreset.start.copy(alpha = if (isPriorityActive) 0.78f else 0.42f)
         )
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            // Subtle radar glow rings on right half of the card
-            Canvas(
-                modifier = Modifier
-                    .matchParentSize()
-            ) {
-                val center = Offset(size.width * 0.72f, size.height * 0.45f)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(cardTintBrush)
+        ) {
+            // Subtle radar glow rings tinted in the key's chosen color
+            Canvas(modifier = Modifier.matchParentSize()) {
+                val center = Offset(size.width * 0.74f, size.height * 0.46f)
                 val baseRadius = size.minDimension * 0.22f
-                val glowColor = if (isPriorityActive) StealthColors.Emerald else StealthColors.Crimson
+                val glowColor = colorPreset.start
 
                 drawCircle(
                     brush = Brush.radialGradient(
                         colors = listOf(
-                            glowColor.copy(alpha = if (isPriorityActive) 0.22f else 0.08f),
+                            glowColor.copy(alpha = if (isPriorityActive) 0.28f else 0.12f),
                             Color.Transparent
                         ),
                         center = center,
@@ -344,7 +351,7 @@ private fun UnifiedCockpitHeroCard(
                 for (i in 0..3) {
                     val fraction = ((pulsePhase + i * 0.25f) % 1f)
                     val radius = baseRadius + fraction * size.minDimension * 0.62f
-                    val alpha = if (isPriorityActive) (1f - fraction) * 0.32f else 0.08f
+                    val alpha = if (isPriorityActive) (1f - fraction) * 0.36f else 0.10f
                     drawCircle(
                         color = glowColor.copy(alpha = alpha),
                         radius = radius,
@@ -371,7 +378,7 @@ private fun UnifiedCockpitHeroCard(
                                 modifier = Modifier
                                     .size(10.dp)
                                     .clip(CircleShape)
-                                    .background(accent)
+                                    .background(statusDotColor)
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
@@ -390,7 +397,7 @@ private fun UnifiedCockpitHeroCard(
                             Icon(
                                 imageVector = Icons.Rounded.Edit,
                                 contentDescription = "Редактировать",
-                                tint = StealthColors.TextSecondary,
+                                tint = StealthColors.TextPrimary.copy(alpha = 0.8f),
                                 modifier = Modifier.size(18.dp)
                             )
                         }
@@ -398,27 +405,45 @@ private fun UnifiedCockpitHeroCard(
 
                     Spacer(Modifier.height(14.dp))
 
-                    // Key title + Monospace UID
-                    Text(
-                        text = key.name,
-                        color = StealthColors.TextPrimary,
-                        fontSize = 26.sp,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
-                    val displayUid = key.effectiveUidHex()
-                    if (displayUid.isNotBlank()) {
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            text = "UID $displayUid",
-                            color = StealthColors.TextSecondary,
-                            fontSize = 14.sp,
-                            fontFamily = FontFamily.Monospace,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
+                    // Key icon badge + title + Monospace UID
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .size(44.dp)
+                                .clip(RoundedCornerShape(13.dp))
+                                .background(colorPreset.brush()),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = KeyPresets.iconFor(key.iconId),
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                        Spacer(Modifier.width(12.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = key.name,
+                                color = StealthColors.TextPrimary,
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            val displayUid = key.effectiveUidHex()
+                            if (displayUid.isNotBlank()) {
+                                Spacer(Modifier.height(2.dp))
+                                Text(
+                                    text = "UID $displayUid",
+                                    color = StealthColors.TextPrimary.copy(alpha = 0.72f),
+                                    fontSize = 13.sp,
+                                    fontFamily = FontFamily.Monospace,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
                     }
 
                     Spacer(Modifier.height(16.dp))
@@ -437,13 +462,13 @@ private fun UnifiedCockpitHeroCard(
                     }
                 }
 
-                // Sleek progress line along bottom edge of card
+                // Sleek progress line along bottom edge of card in key's color
                 LinearProgressIndicator(
                     progress = { progress },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(3.dp),
-                    color = accent,
+                        .height(3.5.dp),
+                    color = colorPreset.start,
                     trackColor = StealthColors.BorderSubtle
                 )
             }
@@ -454,13 +479,13 @@ private fun UnifiedCockpitHeroCard(
 @Composable
 private fun MicroInfoPill(text: String) {
     Surface(
-        color = Color(0xFF171D26).copy(alpha = 0.9f),
+        color = Color(0xFF0E131A).copy(alpha = 0.82f),
         shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(1.dp, StealthColors.Border)
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.12f))
     ) {
         Text(
             text = text,
-            color = StealthColors.TextPrimary.copy(alpha = 0.88f),
+            color = StealthColors.TextPrimary.copy(alpha = 0.90f),
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
             maxLines = 1,
@@ -558,36 +583,54 @@ private fun StealthKeyTile(
     onClick: () -> Unit,
     onEdit: () -> Unit
 ) {
+    val colorPreset = KeyPresets.colorFor(key.colorId)
+    val tileTintBrush = Brush.linearGradient(
+        colors = listOf(
+            colorPreset.start.copy(alpha = if (isSelected) 0.34f else 0.17f),
+            colorPreset.end.copy(alpha = if (isSelected) 0.14f else 0.06f),
+            StealthColors.Surface
+        )
+    )
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(106.dp)
+            .height(114.dp)
             .clip(RoundedCornerShape(16.dp))
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         color = StealthColors.Surface,
         border = BorderStroke(
-            width = 1.dp,
-            color = if (isSelected) StealthColors.EmeraldBorder else StealthColors.Border
+            width = if (isSelected) 1.5.dp else 1.dp,
+            color = colorPreset.start.copy(alpha = if (isSelected) 0.90f else 0.42f)
         )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(14.dp),
+                .background(tileTintBrush)
+                .padding(13.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Top
             ) {
-                Icon(
-                    imageVector = KeyPresets.iconFor(key.iconId),
-                    contentDescription = null,
-                    tint = if (isSelected) StealthColors.EmeraldBright else StealthColors.TextSecondary,
-                    modifier = Modifier.size(22.dp)
-                )
+                Box(
+                    modifier = Modifier
+                        .size(34.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(colorPreset.brush()),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = KeyPresets.iconFor(key.iconId),
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(19.dp)
+                    )
+                }
                 IconButton(
                     onClick = onEdit,
                     modifier = Modifier.size(24.dp)
@@ -595,7 +638,7 @@ private fun StealthKeyTile(
                     Icon(
                         imageVector = Icons.Rounded.Edit,
                         contentDescription = "Изменить",
-                        tint = StealthColors.TextMuted,
+                        tint = StealthColors.TextPrimary.copy(alpha = 0.6f),
                         modifier = Modifier.size(15.dp)
                     )
                 }
@@ -613,7 +656,7 @@ private fun StealthKeyTile(
                 Spacer(Modifier.height(2.dp))
                 Text(
                     text = key.subtitle.ifBlank { "SAK ${key.safeSakHex()}" },
-                    color = if (isSelected) StealthColors.EmeraldBright else StealthColors.TextSecondary,
+                    color = if (isSelected) colorPreset.start else StealthColors.TextSecondary,
                     fontSize = 12.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -628,7 +671,7 @@ private fun AddKeyGridTile(onClick: () -> Unit) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(106.dp)
+            .height(114.dp)
             .clip(RoundedCornerShape(16.dp))
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),

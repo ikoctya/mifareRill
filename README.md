@@ -1,15 +1,15 @@
 <p align="center">
-  <img src="docs/icon.svg" width="96" height="96" alt="mifareRill Cyber-Key NFC Icon" />
+  <img src="docs/icon.png" width="112" height="112" alt="mifareRill Cyber-Key NFC Icon" />
 </p>
 
-<h1 align="center">mifareRill — NFC Ключница (v3.0.0)</h1>
+<h1 align="center">mifareRill — NFC Ключница (v3.0.1)</h1>
 
 <p align="center">
   Современное Android-приложение на <b>Kotlin + Jetpack Compose + Material 3</b> для хранения и эмуляции NFC-ключей (домофонов, пропусков, шлагбаумов и СКУД) с <b>реальной подменой аппаратного UID без root</b> на Android 15/16, <b>выдачей прав без ПК</b> и <b>автоматическим возвратом вашего приложения оплаты</b> (Яндекс Пэй, Т-Банк, Сбер, Mir Pay и др.).
 </p>
 
 <p align="center">
-  <a href="releases/mifareRill-v3.0.0.apk"><b>⬇ Скачать mifareRill v3.0.0 (APK)</b></a>
+  <a href="releases/mifareRill-v3.0.1.apk"><b>⬇ Скачать mifareRill v3.0.1 (APK)</b></a>
 </p>
 
 > **Проверено на реальном оборудовании:** Xiaomi HyperOS (Android 16, API 36, без root) успешно открывает домофон **Beward (MIFARE)** на профилях `MIFARE+HCE (28)` и `HCE + UID (20)` с перевёрнутым порядком байт.
