@@ -69,7 +69,7 @@ adb shell pm grant com.nfckeywallet.app android.permission.WRITE_SECURE_SETTINGS
 ./gradlew :app:assembleRelease
 ```
 
-Готовый APK появится в `app/build/outputs/apk/release/app-release.apk`. При каждом пуше в `main` сборку также выполняет GitHub Actions ([`.github/workflows/android-build.yml`](.github/workflows/android-build.yml)).
+Готовый APK появится в `app/build/outputs/apk/release/app-release.apk`.
 
 ## Ограничения
 
