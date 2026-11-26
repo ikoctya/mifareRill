@@ -79,3 +79,13 @@ adb shell pm grant com.nfckeywallet.app android.permission.WRITE_SECURE_SETTINGS
 ## Лицензия
 
 [MIT License](LICENSE)
+
+## Поддержать проект
+
+Если приложение оказалось полезным, поддержать разработку можно переводом **USDT (сеть TON)**:
+
+```text
+UQCDxpB4BUPjxL-phj-ihrTiR5SLzKozvoKRSkp9ZMwgyJc3
+```
+
+[Открыть в TON-кошельке](ton://transfer/UQCDxpB4BUPjxL-phj-ihrTiR5SLzKozvoKRSkp9ZMwgyJc3)
